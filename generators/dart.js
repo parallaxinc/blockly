@@ -109,7 +109,7 @@ Blockly.Dart.init = function(workspace) {
   }
 
   var defvars = [];
-  var variables = Blockly.Variables.allVariables(workspace);
+  var variables = workspace.variableList;
   if (variables.length) {
     for (var i = 0; i < variables.length; i++) {
       defvars[i] = Blockly.Dart.variableDB_.getName(variables[i],
@@ -191,6 +191,7 @@ Blockly.Dart.scrub_ = function(block, code) {
   if (!block.outputConnection || !block.outputConnection.targetConnection) {
     // Collect comment for this block.
     var comment = block.getCommentText();
+    comment = Blockly.utils.wrap(comment, Blockly.Dart.COMMENT_WRAP - 3);
     if (comment) {
       if (block.getProcedureDef) {
         // Use documentation comment for function comments.
