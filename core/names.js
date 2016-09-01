@@ -41,7 +41,8 @@ Blockly.Names = function(reservedWords, opt_variablePrefix) {
   if (reservedWords) {
     var splitWords = reservedWords.split(',');
     for (var i = 0; i < splitWords.length; i++) {
-      this.reservedDict_[splitWords[i]] = true;
+      // BlocklyProp #654: Make reserved words checks case insensitive
+      this.reservedDict_[splitWords[i].toLowerCase()] = true;
     }
   }
   this.reset();
@@ -96,13 +97,14 @@ Blockly.Names.prototype.getName = function(name, type) {
 Blockly.Names.prototype.getDistinctName = function(name, type) {
   var safeName = this.safeName_(name);
   var i = '';
-  while (this.dbReverse_[safeName + i] ||
-         (safeName + i) in this.reservedDict_) {
+    // BlocklyProp #654: Make reserved words checks case insensitive
+  while (this.dbReverse_[(safeName + i).toLowerCase()] ||
+         (safeName + i).toLowerCase() in this.reservedDict_) {
     // Collision with existing name.  Create a unique name.
     i = i ? i + 1 : 2;
   }
   safeName += i;
-  this.dbReverse_[safeName] = true;
+  this.dbReverse_[safeName.toLowerCase()] = true;
   var prefix = (type == Blockly.Variables.NAME_TYPE) ?
       this.variablePrefix_ : '';
   return prefix + safeName;
